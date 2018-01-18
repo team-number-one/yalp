@@ -1,21 +1,21 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Suggest from './GoogleSuggest.jsx';
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
-    this.latLin = undefined;
+    this.state = {
+      latLin: undefined
+    }
   }
 
   latLinChange(loc) {
-    this.latLin = loc;
+    this.setState({ latLin : loc });
   }
 
-  render() { 
+  render() {
     return (
       <div>
-        <h3 style={{color: 'white'}}>Location</h3>
         <Suggest locChange={this.latLinChange.bind(this)}/>
         <input className="searchBar" ref="searchTerm" type="text" size="30" placeholder="What's nearby?" />
         <button type="Search" onClick={e => this.props.goToListings(this.refs.searchTerm.value, this.latLin)}>
