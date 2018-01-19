@@ -492,6 +492,178 @@ const getFavorites = function(userId, cb) {
     });
 };
 
+const addSwoop = function(userId, businessId, swoopDate, cb) {
+  let query = `INSERT INTO swoops (user_id, business_id, swoopDate) VALUES (${userId}, '${businessId}', '${swoopDate}')`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  });
+}
+
+// businessId optional, a swoop list on search page will show all swoops by friends
+// whereas on a page it will show all swoops by friends for that business. So, businessId
+// will only be sent for the swoop rendering on business pages
+const getSwoop = function(userId, businessId = 0) {
+  var query;
+  if (businessId = 0) {
+    query = `SELECT DISTINCT swoops.* FROM swoops 
+      INNER JOIN friends 
+      WHERE is_pending = 0 AND (sender_id = ${userId} OR receiver_id = ${userId})
+      AND (swoops.user_id = friends.receiver_id OR swoops.user_id = friends.sender_id)`;
+  } else {
+    query = `SELECT DISTINCT swoops.* FROM swoops 
+      INNER JOIN friends 
+      WHERE is_pending = 0 AND (sender_id = ${userId} OR receiver_id = ${userId})
+      AND (swoops.user_id = friends.receiver_id OR swoops.user_id = friends.sender_id)
+      AND (swoops.business_id = '${businessId}')`;
+  }
+  connection.query(query, (err, results) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  });
+}
+
+const deleteSwoop = function(userId, businessId, swoopDate, cb) {
+  let query = `DELETE FROM swoops WHERE user_id = ${userId} AND business_id = '${businessId}' AND swoopDate = '${swoopDate}'`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  });
+}
+
+//squad up
+const addSquad = function(userId, swoopId, cb) {
+  let query = `INSERT INTO squads (user_id, swoop_id) VALUES (${userId}, ${swoopId})`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  });
+}
+
+const getSquad = function(swoopId, cb) {
+  let query = `SELECT users.name FROM users
+  INNER JOIN squads
+  WHERE squads.user_id = users.id
+  AND squads.swoop_id = '${swoopId}'`;
+}
+
+//flake smh
+const deleteSquad = function(userId, swoopId, cb) {
+  let query = `DELETE FROM squads WHERE user_id = ${userId} AND swoop_id = '${swoopId}'`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  });
+}
+
+//MYSQL QUERIES FOR:
+
+// Businesses
+
+// INSERT INTO businesses (name) VALUE ("Tu Lan");
+// INSERT INTO businesses (name) VALUE ("Chipotle");
+// INSERT INTO businesses (name) VALUE ("McDonalds");
+// INSERT INTO businesses (name) VALUE ("Fancy Steak House");
+// INSERT INTO businesses (name) VALUE ("Tempest");
+// INSERT INTO businesses (name) VALUE ("Some Expensive Place");
+
+//Users
+
+// INSERT INTO users (name, email, password, username) VALUES ("Chris", "Chris@Chris.com", "Chris", "ChrisChris");
+// INSERT INTO users (name, email, password, username) VALUES ("Kayleigh", "Kayleigh@Kayleigh.com", "Kayleigh", "Kayleigh");
+// INSERT INTO users (name, email, password, username) VALUES ("Connor", "Connor@Connor.com", "Connor", "Connor");
+// INSERT INTO users (name, email, password, username) VALUES ("Peter", "Peter@Peter.com", "Peter", "PeterPeterPumpkinEater");
+// INSERT INTO users (name, email, password, username) VALUES ("Fred", "Fred@Fred.com", "Fred", "Fred");
+// INSERT INTO users (name, email, password, username) VALUES ("Moises", "Moises@Chris.com", "BigCuddlyBear", "Weird");
+
+//Reviews
+//user_id, business_id, text
+
+// INSERT INTO reviews (user_id, business_id, text) VALUES (1, 1, "this place is really tasty");
+// INSERT INTO reviews (user_id, business_id, text) VALUES (2, 2, "this place sucks ass");
+// INSERT INTO reviews (user_id, business_id, text) VALUES (3, 3, "this place could use better service");
+// INSERT INTO reviews (user_id, business_id, text) VALUES (4, 4, "this place is pretty mediocre");
+// INSERT INTO reviews (user_id, business_id, text) VALUES (5, 5, "this place is pretty good");
+// INSERT INTO reviews (user_id, business_id, text) VALUES (6, 6, "this place is utter trash");
+
+//CheckIns
+
+// INSERT INTO checkins (user_id, business_id) VALUES (1, 1);
+// INSERT INTO checkins (user_id, business_id) VALUES (2, 2);
+// INSERT INTO checkins (user_id, business_id) VALUES (3, 3);
+// INSERT INTO checkins (user_id, business_id) VALUES (4, 4);
+// INSERT INTO checkins (user_id, business_id) VALUES (5, 5);
+// INSERT INTO checkins (user_id, business_id) VALUES (6, 6);
+
+//friends
+
+// INSERT INTO checkins (user_id1, user_id2) VALUES (1, 2);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (1, 3);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (1, 4);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (1, 6);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (2, 3);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (2, 5);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (2, 6);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (3, 4);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (3, 5);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (3, 6);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (4, 6);
+// INSERT INTO checkins (user_id1, user_id2) VALUES (5, 6);
+
+
+
+//TEST FUNCTION CALLS
+
+// connection.query(`SELECT * from USERS`, (err, results) => {
+//     if (err) {
+//         console.log(err)
+//     } else {
+//         console.log(results);
+//     }
+// })
+
+// postUser({ name: "testName", email: "testEmail", password: "testPassword", username: "testUsername" }, (err, results) => {
+//     if (err) {
+//         console.log(err)
+//     } else {
+//         console.log(results)
+//     }
+// })
+
+// getUserById(1, (err, results) => {
+//     if (err) {
+//         console.log(err)
+//     } else {
+//         console.log(results);
+//     }
+// })
+
+// getBusinessById(1, (err, results) => {
+//     if (err) {
+//         console.log(err)
+//     } else {
+//         console.log(results);
+//     }
+// })
+
+
+//connection.queries
+
 module.exports = {
   connection,
   getUser,
@@ -524,6 +696,10 @@ module.exports = {
   getAllReviews,
   getLoggedReviews,
   postDM,
-  getChat
-
+  getChat,
+  addSwoop,
+  getSwoop,
+  deleteSwoop,
+  addSquad,
+  deleteSquad
 }
