@@ -506,9 +506,9 @@ const addSwoop = function(userId, businessId, swoopDate, cb) {
 // businessId optional, a swoop list on search page will show all swoops by friends
 // whereas on a page it will show all swoops by friends for that business. So, businessId
 // will only be sent for the swoop rendering on business pages
-const getSwoop = function(userId, businessId = 0) {
+const getSwoop = function(userId, businessId = 0, cb) {
   var query;
-  if (businessId = 0) {
+  if (businessId === 0) {
     query = `SELECT DISTINCT swoops.* FROM swoops 
       INNER JOIN friends 
       WHERE is_pending = 0 AND (sender_id = ${userId} OR receiver_id = ${userId})
@@ -530,6 +530,7 @@ const getSwoop = function(userId, businessId = 0) {
 }
 
 const deleteSwoop = function(userId, businessId, swoopDate, cb) {
+  console.log('deleteswoops');
   let query = `DELETE FROM swoops WHERE user_id = ${userId} AND business_id = '${businessId}' AND swoopDate = '${swoopDate}'`;
   connection.query(query, (err, results) => {
     if (err) {
@@ -552,11 +553,19 @@ const addSquad = function(userId, swoopId, cb) {
   });
 }
 
+//who all goin?
 const getSquad = function(swoopId, cb) {
   let query = `SELECT users.name FROM users
   INNER JOIN squads
   WHERE squads.user_id = users.id
   AND squads.swoop_id = '${swoopId}'`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  });
 }
 
 //flake smh
@@ -701,5 +710,6 @@ module.exports = {
   getSwoop,
   deleteSwoop,
   addSquad,
+  getSquad,
   deleteSquad
 }
