@@ -5,7 +5,12 @@ class SwoopEntry extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      squad: 0
+      squad: 0,
+      userInSquad: false,
+      userInfo: JSON.parse(localStorage.loggedUser),
+      // better to check with sqaudIds than squad array because if youre the only one in
+      // squad it won't work as expected
+      squadIds: 0
     }
   }
   componentDidMount() {
@@ -13,11 +18,25 @@ class SwoopEntry extends React.Component {
   }
 
   squadUp() {
-
+    let reqInfo = {
+      userId: this.state.userInfo.id,
+      swoopId: this.props.swoop.id
+    }
+    axios.post('/squads/add', reqInfo)
+      .then(
+        this.verifySquad()
+      )
   }
 
   flake() {
-
+    let reqInfo = {
+      userId: this.state.userInfo.id,
+      swoopId: this.props.swoop.id
+    }
+    axios.post('/squads/delete', reqInfo)
+      .then(
+        this.verifySquad()
+      )
   }
 
   verifySquad() {
@@ -28,10 +47,22 @@ class SwoopEntry extends React.Component {
       .then(resp => {
         if (resp.data.length > 0) {
           let squadStr = ''
+          let squadIds = [];
           for (let i = 0; i < resp.data.length; i++) {
-            squadStr += `, ${resp.data[i].name}`;
+            squadIds.push(resp.data[i].id)
+            if (resp.data[i].id !== this.state.userInfo.id) {
+              squadStr += `, ${resp.data[i].name}`;
+            }
           }
-          this.setState({squad: squadStr});
+          if (squadIds.includes(this.state.userInfo.id)) {
+            this.setState({userInSquad: true, squad: squadStr, squadIds: squadIds})
+          } else {
+            this.setState({userInSquad: false, squad: squadStr, squadIds: squadIds});
+          }
+        }
+        //if you were only one in squad and leave, need to account for that with this else
+        else {
+          this.setState({userInSquad: false, squad: 0, squadIds: 0});
         }
       })
   }
@@ -42,10 +73,18 @@ class SwoopEntry extends React.Component {
         <div>
           At {this.props.swoop.business_id} on {this.props.swoop.swoopDate}
         </div>
-        {this.state.squad ? 
-          <div>Squad: {this.props.swoop.name}{this.state.squad}</div>
+        {this.state.squadIds ? 
+          this.state.userInSquad ?
+          <div>Squad: {this.props.swoop.name}{this.state.squad}, You</div>
+          : <div>Squad: {this.props.swoop.name}{this.state.squad}</div>
           : <div>Squad: {this.props.swoop.name}</div>
         }
+        <div>
+          {this.state.userInSquad ?
+            <button className="deleteSquad" onClick={this.flake.bind(this)}>Flake</button>
+            : <button className="addSquad" onClick={this.squadUp.bind(this)}>Squad Up!</button>
+          }
+        </div>
       </div>
     )
   }

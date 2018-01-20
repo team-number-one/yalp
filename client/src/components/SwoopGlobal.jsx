@@ -29,6 +29,7 @@ class SwoopGlobal extends React.Component {
   render() {
     return(
       <div className="swoopGlobal">
+      <div>Swoops:</div>
         {this.state.swoops ? 
           this.state.swoops.map(swoop => {
             return <SwoopEntry swoop={swoop}/> 

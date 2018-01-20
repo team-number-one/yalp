@@ -567,7 +567,7 @@ const addSquad = function(userId, swoopId, cb) {
 
 //who all goin?
 const getSquad = function(swoopId, cb) {
-  let query = `SELECT users.name FROM users
+  let query = `SELECT users.name, users.id FROM users
   INNER JOIN squads
   WHERE squads.user_id = users.id
   AND squads.swoop_id = '${swoopId}'`;
