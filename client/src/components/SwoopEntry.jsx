@@ -27,7 +27,11 @@ class SwoopEntry extends React.Component {
     axios.post('/squads/get', reqInfo)
       .then(resp => {
         if (resp.data.length > 0) {
-          this.setState({squad: resp.data})
+          let squadStr = ''
+          for (let i = 0; i < resp.data.length; i++) {
+            squadStr += `, ${resp.data[i].name}`;
+          }
+          this.setState({squad: squadStr});
         }
       })
   }
@@ -39,10 +43,8 @@ class SwoopEntry extends React.Component {
           At {this.props.swoop.business_id} on {this.props.swoop.swoopDate}
         </div>
         {this.state.squad ? 
-          this.state.squad.map(squadMember => {
-            return {squadMember}
-          }) :
-          <div>Squad: {this.props.swoop.name}</div>
+          <div>Squad: {this.props.swoop.name}{this.state.squad}</div>
+          : <div>Squad: {this.props.swoop.name}</div>
         }
       </div>
     )
