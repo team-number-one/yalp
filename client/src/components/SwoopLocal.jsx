@@ -1,21 +1,34 @@
 import React from 'react';
 import axios from 'axios';
+import SwoopEntry from './SwoopEntry.jsx';
 
-class Swoop extends React.Component {
+class SwoopLocal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      onSearchPage: 0,
-      onBusinessPage: 0,
       swoops: []
     }
   }
 
+  componentDidMount() {
+
+  }
+
+  getSwoops() {
+
+  }
+
   render() {
     return(
-      <div>
-
+      <div className="swoopLocal">
+        {
+          this.state.swoops.map(swoop => {
+            return (<SwoopEntry swoopDate={swoop.swoopDate}/>)
+          })
+        }
       </div>
     )
   }
 }
+
+export default SwoopLocal;

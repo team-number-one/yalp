@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-class Swoop extends React.Component {
+class SwoopSignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,3 +19,5 @@ class Swoop extends React.Component {
     )
   }
 }
+
+export default SwoopSignUp;

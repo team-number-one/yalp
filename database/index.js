@@ -503,22 +503,34 @@ const addSwoop = function(userId, businessId, swoopDate, cb) {
   });
 }
 
+let checkSwoopExists = function(userId, businessId, swoopDate, cb) {
+  connection.query(`SELECT count(*) FROM swoops WHERE user_id=${userId} AND business_id= '${businessId}' AND swoopDate = '${swoopDate}'`, (err, results) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  });
+};
+
 // businessId optional, a swoop list on search page will show all swoops by friends
 // whereas on a page it will show all swoops by friends for that business. So, businessId
 // will only be sent for the swoop rendering on business pages
 const getSwoop = function(userId, businessId = 0, cb) {
   var query;
   if (businessId === 0) {
-    query = `SELECT DISTINCT swoops.* FROM swoops 
-      INNER JOIN friends 
-      WHERE is_pending = 0 AND (sender_id = ${userId} OR receiver_id = ${userId})
-      AND (swoops.user_id = friends.receiver_id OR swoops.user_id = friends.sender_id)`;
-  } else {
-    query = `SELECT DISTINCT swoops.* FROM swoops 
+    query = `SELECT DISTINCT swoops.*, users.name FROM swoops, users 
       INNER JOIN friends 
       WHERE is_pending = 0 AND (sender_id = ${userId} OR receiver_id = ${userId})
       AND (swoops.user_id = friends.receiver_id OR swoops.user_id = friends.sender_id)
-      AND (swoops.business_id = '${businessId}')`;
+      AND (users.id = swoops.user_id)`;
+  } else {
+    query = `SELECT DISTINCT swoops.*, users.name FROM swoops, users
+      INNER JOIN friends 
+      WHERE is_pending = 0 AND (sender_id = ${userId} OR receiver_id = ${userId})
+      AND (swoops.user_id = friends.receiver_id OR swoops.user_id = friends.sender_id)
+      AND (swoops.business_id = '${businessId}')
+      AND (users.id = swoops.user_id)`;
   }
   connection.query(query, (err, results) => {
     if (err) {
@@ -707,6 +719,7 @@ module.exports = {
   postDM,
   getChat,
   addSwoop,
+  checkSwoopExists,
   getSwoop,
   deleteSwoop,
   addSquad,
