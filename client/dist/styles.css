@@ -330,4 +330,32 @@ h1 { font-size: 1.5em; margin: 10px; }
 .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
 .rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
 
+/* NAVBARS */
+.navs {
+  height: 35px;
+  font-size: 18px;
+  min-height: 35px;
+}
 
+.chatBtn {
+  float: right;
+}
+
+.menuitem-friend {
+  float: left;
+  margin-top: 10px;
+}
+
+.navbar-nav>li>a {
+  padding-top: 10px;
+}
+
+.dropdown-menu {
+  padding-top: 0;
+}
+
+/* DIRECT MESSAGE */
+
+.dm-body {
+  height: 500px;
+}

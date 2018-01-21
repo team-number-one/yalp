@@ -45,6 +45,7 @@
     "passport": "^0.4.0",
     "pg": "^7.4.1",
     "react": "^16.2.0",
+    "react-bootstrap": "^0.32.0",
     "react-dom": "^16.2.0",
     "react-google-maps-loader": "^4.1.0",
     "react-google-places-suggest": "^3.2.2",

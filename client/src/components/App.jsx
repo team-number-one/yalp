@@ -8,6 +8,7 @@ import Search from './Search.jsx';
 import BusinessList from './BusinessList.jsx';
 import BusinessPage from './BusinessPage.jsx';
 import Profile from './Profile.jsx';
+import FriendNav from './FriendNav.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -176,6 +177,7 @@ class App extends React.Component {
             <Redirect to="/"/>
           )}/>
         </Switch>
+        { this.props.location.pathname !== '/' && this.hasLoggedUser() ? <FriendNav /> : undefined }
     </div>
     )
   }

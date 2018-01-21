@@ -112,6 +112,20 @@ app.post('/review', (req, res) => {
   })
 });
 
+// Obtain chatlog
+app.get('/server/dm/log', (req, res) => {
+  db.getChat(req.query.user1, req.query.user2, (err, results, chatId) => {
+    err ? res.send(err) : res.send([results, chatId]);
+  });
+});
+
+// User DMs a friend
+app.post('/server/dm/message', (req, res) => {
+  db.postDM(req.body.text, req.body.chatId, req.body.sender, (err, results) => {
+    err ? res.send(err) : res.send(results);
+  });
+});
+
 //when business page reviews render
 app.get('/server/reviews/friends', (req, res) => {
   db.getFriendsReviews(req.query.userId, req.query.businessId, (err, results) => {
@@ -145,7 +159,6 @@ app.get('/server/allreviews', (req, res) => {
 
 // reviews when there is someone logged in
 app.get('/server/loggedreviews', (req, res) => {
-  console.log(req.query);
   db.getLoggedReviews(req.query.loggedId, req.query.businessId, (err, results) => {
     err ? res.status(400).end('Unable to retrieve reviews.') : res.status(200).json(results);
   });

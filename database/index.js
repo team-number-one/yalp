@@ -91,6 +91,47 @@ const getBusinessById = function (id, cb) {
   })
 }
 
+const postDM = function(text, chatId, senderId, cb) {
+  let query = `INSERT INTO messages (text, chat_id, sender_id) VALUES ('${text}', ${chatId}, ${senderId});`;
+  connection.query(query, (err, results) => {
+    err ? cb(err) : cb(null, results);
+  });
+};
+
+const getChat = function(user1, user2, cb) {
+  let query1 = `SELECT id FROM chats WHERE chats.user1 = ${user1} AND chats.user2 = ${user2};`;
+  let query2 = `SELECT id FROM chats WHERE chats.user1 = ${user2} AND chats.user2 = ${user1};`;
+  let query3 = `INSERT INTO chats (user1, user2) VALUES (${user1}, ${user2});`;
+
+  connection.query(query1, (err, results) => {
+    if (err) {
+      cb(err)
+    } else {
+      if (results.length) {
+        connection.query(`SELECT * FROM messages WHERE chat_id = ${results[0].id};`, (err, results) => {
+          err ? cb(err) : cb(null, results, results[0].id);
+        });
+      } else {
+        connection.query(query2, (err, results) => {
+          if (err) {
+            cb(err)
+          } else {
+            if (results.length) {
+              connection.query(`SELECT * FROM messages WHERE chat_id = ${results[0].id};`, (err, results) => {
+                err ? cb(err) : cb(null, results, results[0].id);
+              });
+            } else {
+              connection.query(query3, (err, results) => {
+                err ? cb(err) : getChat(user1, user2, cb);
+              });
+            }
+          }
+        });
+      }
+    }
+  });
+};
+
 const friendChecker = function (userId, friendId, cb) {
 
   let query1 = `SELECT friends.user_id2 FROM friends WHERE friends.user_id1 = ${userId} AND friends.user_id2 = ${friendId};`;
@@ -479,5 +520,8 @@ module.exports = {
   getFavorites,
   checkUserExists,
   getAllReviews,
-  getLoggedReviews
+  getLoggedReviews,
+  postDM,
+  getChat
+
 }

@@ -112,7 +112,7 @@ export default class GoogleSuggest extends React.Component {
               <input
                 type="text"
                 value={value}
-                placeholder="Search a location"
+                placeholder="Enter a location"
                 onChange={this.handleInputChange.bind(this)}
               />
             </GooglePlacesSuggest>
