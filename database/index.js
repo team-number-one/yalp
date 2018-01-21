@@ -108,8 +108,9 @@ const getChat = function(user1, user2, cb) {
       cb(err)
     } else {
       if (results.length) {
-        connection.query(`SELECT * FROM messages WHERE chat_id = ${results[0].id};`, (err, results) => {
-          err ? cb(err) : cb(null, results, results[0].id);
+        let chatId = results[0].id;
+        connection.query(`SELECT * FROM messages WHERE chat_id = ${chatId};`, (err, results) => {
+          err ? cb(err) : cb(null, results, chatId);
         });
       } else {
         connection.query(query2, (err, results) => {
@@ -117,8 +118,9 @@ const getChat = function(user1, user2, cb) {
             cb(err)
           } else {
             if (results.length) {
-              connection.query(`SELECT * FROM messages WHERE chat_id = ${results[0].id};`, (err, results) => {
-                err ? cb(err) : cb(null, results, results[0].id);
+              let chatId = results[0].id;
+              connection.query(`SELECT * FROM messages WHERE chat_id = ${chatId};`, (err, results) => {
+                err ? cb(err) : cb(null, results, chatId);
               });
             } else {
               connection.query(query3, (err, results) => {
