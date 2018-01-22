@@ -82,14 +82,10 @@ class SwoopEntry extends React.Component {
       swoopId: this.props.swoop.id
     }
     axios.post('/swoops/squads/delete', reqInfo)
-    .then(resp => {
-      console.log(resp.data);
-    })
   }
 
   deleteSwoopHandler() {
     this.deleteSwoopsSquads();
-    console.log(this.props)
     this.props.deleteSwoop(this.state.userInfo.id, this.props.swoop.business_id, this.props.swoop.swoopDate);
   }
 

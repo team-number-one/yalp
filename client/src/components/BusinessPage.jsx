@@ -97,6 +97,7 @@ class BusinessPage extends React.Component {
         {this.state.business.id && <div className="reviews">
           <Reviews business={this.state.business} username={this.loggedUser ? this.loggedUser.username : null} userId={this.loggedUser ? this.loggedUser.id : null} />
         </div>}
+        <SwoopLocal business={this.state.business}/>
         {/* <div className="friend-activity">
           <FriendActivity business={this.props.business} username={this.props.username} userId={this.props.userId}/>
         </div> */}
@@ -105,7 +106,6 @@ class BusinessPage extends React.Component {
           <PhotoFeed photos={this.photos} />
         </div>
         }
-        <SwoopLocal businessId={this.state.business.id}/>
       </div>
     )
   }

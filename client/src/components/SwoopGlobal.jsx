@@ -11,7 +11,6 @@ class SwoopGlobal extends React.Component {
       swoops: 0,
       ownSwoops: 0
     }
-    // this.deleteSwoop = this.deleteSwoop.bind(this);
   }
 
   componentDidMount() {

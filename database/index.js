@@ -492,8 +492,8 @@ const getFavorites = function(userId, cb) {
     });
 };
 
-const addSwoop = function(userId, businessId, swoopDate, cb) {
-  let query = `INSERT INTO swoops (user_id, business_id, swoopDate) VALUES (${userId}, '${businessId}', '${swoopDate}')`;
+const addSwoop = function(userId, businessId, businessName, swoopDate, cb) {
+  let query = `INSERT INTO swoops (user_id, business_id, business_name, swoopDate) VALUES (${userId}, '${businessId}', '${businessName}', '${swoopDate}')`;
   connection.query(query, (err, results) => {
     if (err) {
       cb(err, null);
@@ -503,8 +503,8 @@ const addSwoop = function(userId, businessId, swoopDate, cb) {
   });
 }
 
-let checkSwoopExists = function(userId, businessId, swoopDate, cb) {
-  connection.query(`SELECT count(*) FROM swoops WHERE user_id=${userId} AND business_id= '${businessId}' AND swoopDate = '${swoopDate}'`, (err, results) => {
+let checkSwoopExists = function(userId, businessId, businessName, swoopDate, cb) {
+  connection.query(`SELECT count(*) FROM swoops WHERE user_id = ${userId} AND business_id = '${businessId}' AND business_name = '${businessName}' AND swoopDate = '${swoopDate}'`, (err, results) => {
     if (err) {
       cb(err, null);
     } else {
@@ -551,7 +551,6 @@ const getOwnSwoops = function(userId, businessId = 0, cb) {
   } else {
     query = `SELECT * FROM swoops WHERE user_id = ${userId} AND swoops.business_id = '${businessId}'`;
   }
-  console.log(query)
   connection.query(query, (err, results) => {
     if (err) {
       cb(err, null);
@@ -562,7 +561,6 @@ const getOwnSwoops = function(userId, businessId = 0, cb) {
 }
 
 const deleteSwoop = function(userId, businessId, swoopDate, cb) {
-  console.log(userId, businessId, swoopDate);
   let query = `DELETE FROM swoops WHERE user_id = ${userId} AND business_id = '${businessId}' AND swoopDate = '${swoopDate}'`;
   connection.query(query, (err, results) => {
     if (err) {
