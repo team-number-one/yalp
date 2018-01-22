@@ -38,6 +38,22 @@ CREATE TABLE `checkins` (
   `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );
+-- swoopDate MM-DD-YYYY HH:MM
+CREATE TABLE `swoops` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `user_id` INTEGER NOT NULL,
+  `business_id` VARCHAR(255) NOT NULL,
+  `business_name` VARCHAR(255) NOT NULL,
+  `swoopDate` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `squads` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `user_id` INTEGER NOT NULL,
+  `swoop_id` INTEGER NOT NULL,
+  PRIMARY KEY (`id`)
+);
 
 CREATE TABLE `bookmarks` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
@@ -154,6 +170,12 @@ INSERT INTO favorites (user_id, business_id) VALUES (6, '1f');
 INSERT INTO friends (sender_id, receiver_id, is_pending) VALUES (1, 2, 0);
 INSERT INTO friends (sender_id, receiver_id, is_pending) VALUES (1, 3, 0);
 INSERT INTO friends (sender_id, receiver_id, is_pending) VALUES (1, 4, 0);
+INSERT INTO friends (sender_id, receiver_id, is_pending) VALUES (7, 1, 0);
+INSERT INTO friends (sender_id, receiver_id, is_pending) VALUES (7, 2, 0);
+INSERT INTO friends (sender_id, receiver_id, is_pending) VALUES (7, 3, 0);
+INSERT INTO friends (sender_id, receiver_id, is_pending) VALUES (7, 4, 0);
+INSERT INTO friends (sender_id, receiver_id, is_pending) VALUES (7, 5, 0);
+INSERT INTO friends (sender_id, receiver_id, is_pending) VALUES (7, 6, 0);
 INSERT INTO friends (sender_id, receiver_id) VALUES (1, 6);
 INSERT INTO friends (sender_id, receiver_id) VALUES (2, 3);
 INSERT INTO friends (sender_id, receiver_id) VALUES (2, 5);
@@ -163,3 +185,20 @@ INSERT INTO friends (sender_id, receiver_id) VALUES (3, 5);
 INSERT INTO friends (sender_id, receiver_id) VALUES (3, 6);
 INSERT INTO friends (sender_id, receiver_id) VALUES (4, 6);
 INSERT INTO friends (sender_id, receiver_id) VALUES (5, 6);
+
+
+INSERT INTO swoops (user_id, business_id, business_name, swoopDate) VALUES (2, 'place', 'place', 'holder');
+INSERT INTO swoops (user_id, business_id, business_name, swoopDate) VALUES (3, 'place', 'place', 'holder');
+INSERT INTO swoops (user_id, business_id, business_name, swoopDate) VALUES (4, 'chase', 'place', 'holder');
+INSERT INTO swoops (user_id, business_id, business_name, swoopDate) VALUES (6, 'place', 'place', 'holder');
+INSERT INTO swoops (user_id, business_id, business_name, swoopDate) VALUES (1, 'place', 'place', 'holder');
+INSERT INTO swoops (user_id, business_id, business_name, swoopDate) VALUES (7, 'place', 'place', 'holder');
+
+
+INSERT INTO squads (user_id, swoop_id) VALUES (3, 1);
+INSERT INTO squads (user_id, swoop_id) VALUES (4, 1);
+INSERT INTO squads (user_id, swoop_id) VALUES (2, 2);
+INSERT INTO squads (user_id, swoop_id) VALUES (4, 3);
+INSERT INTO squads (user_id, swoop_id) VALUES (7, 1);
+INSERT INTO squads (user_id, swoop_id) VALUES (6, 6);
+INSERT INTO squads (user_id, swoop_id) VALUES (5, 6);

@@ -264,6 +264,63 @@ app.get('/user/favorites/:id', (req, res) => {
   });
 });
 
+app.post('/swoops/add', (req, res) => {
+  db.checkSwoopExists(req.body.userId, req.body.businessId, req.body.businessName, req.body.swoopDate, (err, results) => {
+    if (results[0]['count(*)'] === 0) {
+      db.addSwoop(req.body.userId, req.body.businessId, req.body.businessName, req.body.swoopDate, (err, results) => {
+        res.status(200).send("Added");
+      });
+    } else {
+      res.status(400).send('Swoop exists, just squad up');
+    }
+  });
+});
+
+app.post('/swoops/delete', (req, res) => {
+  db.deleteSwoop(req.body.userId, req.body.businessId, req.body.swoopDate, (err, results) => {
+    res.status(200).send("Deleted");
+  });
+});
+
+app.post('/swoops/squads/delete', (req, res) => {
+  db.deleteSwoopsSquads(req.body.swoopId, (err, results) => {
+    res.status(200).send("Deleted");
+  })
+})
+
+app.post('/swoops/get', (req, res) => {
+  console.log(req.body)
+  db.getSwoops(req.body.userId, req.body.businessId, (err, results) => {
+    res.status(200).send(results);
+  });
+});
+
+app.post('/swoops/get/own', (req, res) => {
+  console.log(req.body)
+  db.getOwnSwoops(req.body.userId, req.body.businessId, (err, results) => {
+    res.status(200).send(results);
+  })
+})
+
+app.post('/squads/add', (req, res) => {
+  db.addSquad(req.body.userId, req.body.swoopId, (err, results) => {
+    res.status(200).send("Added");
+  });
+});
+
+app.post('/squads/delete', (req, res) => {
+  db.deleteSquad(req.body.userId, req.body.swoopId, (err, results) => {
+    res.status(200).send("Deleted");
+  });
+
+});
+
+app.post('/squads/get', (req, res) => {
+  db.getSquads(req.body.swoopId, (err, results) => {
+    res.status(200).send(results);
+  });
+});
+
 // For refreshing react router
 app.get('*', function response(req, res) {
   res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
