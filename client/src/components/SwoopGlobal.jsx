@@ -11,6 +11,7 @@ class SwoopGlobal extends React.Component {
       swoops: 0,
       ownSwoops: 0
     }
+    // this.deleteSwoop = this.deleteSwoop.bind(this);
   }
 
   componentDidMount() {
@@ -20,7 +21,8 @@ class SwoopGlobal extends React.Component {
 
   getSwoops(userId) {
     let reqInfo = {
-      userId: userId
+      userId: userId,
+      businessId: 0
     }
     axios.post('/swoops/get', reqInfo)
       .then(resp => {
@@ -30,26 +32,42 @@ class SwoopGlobal extends React.Component {
 
   getOwnSwoops(userId) {
     let reqInfo = {
-      userId: userId
+      userId: userId,
+      businessId: 0
     }
     axios.post('/swoops/get/own', reqInfo)
       .then(resp => {
-        console.log(resp.data)
         this.setState({ownSwoops: resp.data});
       })   
+  }
+
+  deleteSwoop(userId, businessId, swoopDate) {
+    let reqInfo = {
+      userId: userId,
+      businessId: businessId,
+      swoopDate: swoopDate
+    }
+    axios.post('/swoops/delete', reqInfo)
+      .then(resp => {
+        axios.post('/swoops/get/own', reqInfo)
+        .then(resp => {
+          this.setState({ownSwoops: resp.data});
+        })  
+      })
   }
 
   render() {
     return(
       <div className="swoopGlobal">
       <div>Your own Swoops:</div>
-      {this.state.ownSwoops &&
+      {this.state.ownSwoops.length ?
         this.state.ownSwoops.map(swoop => {
-          return <SwoopEntry swoop={swoop}/>
-        })
+          return <SwoopEntry deleteSwoop={this.deleteSwoop.bind(this)} swoop={swoop}/>
+        }) :
+        <div>No swoops</div>
       }
       <div>Friend Swoops:</div>
-      {this.state.swoops ? 
+      {this.state.swoops.length ? 
         this.state.swoops.map(swoop => {
           return <SwoopEntry swoop={swoop}/> 
         }) :

@@ -10,7 +10,7 @@ const BusinessInfo = (props) => {
   const halfStar = starPercentageRounded % 20 === 10 ? 1 : 0 
   const emptyStars = 5 - fullStars - halfStar;
   const yalpMessage = "Be the first to review!";
-
+  console.log(props)
   for (let i = 0; i < fullStars; i++) {
     googleRating.push(
       (<i className="fa fa-star" aria-hidden="true"></i>)

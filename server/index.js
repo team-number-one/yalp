@@ -265,7 +265,7 @@ app.get('/user/favorites/:id', (req, res) => {
 });
 
 app.post('/swoops/add', (req, res) => {
-  db.checkSwoopExists(req.body.userId, req.body.businessId, req.body.swoopDate, (err, results) => {
+  db.checkSwoopExists(req.body.userId, req.body.businessId, req.body.businessName, req.body.swoopDate, (err, results) => {
     if (results[0]['count(*)'] === 0) {
       db.addSwoop(req.body.userId, req.body.businessId, req.body.swoopDate, (err, results) => {
         res.status(200).send("Added");
@@ -282,6 +282,12 @@ app.post('/swoops/delete', (req, res) => {
   });
 });
 
+app.post('/swoops/squads/delete', (req, res) => {
+  db.deleteSwoopsSquads(req.body.swoopId, (err, results) => {
+    res.status(200).send("Deleted");
+  })
+})
+
 app.post('/swoops/get', (req, res) => {
   db.getSwoops(req.body.userId, req.body.businessId, (err, results) => {
     res.status(200).send(results);
@@ -289,7 +295,7 @@ app.post('/swoops/get', (req, res) => {
 });
 
 app.post('/swoops/get/own', (req, res) => {
-  db.getOwnSwoops(req.body.userId, (err, results) => {
+  db.getOwnSwoops(req.body.userId, req.body.businessId, (err, results) => {
     res.status(200).send(results);
   })
 })

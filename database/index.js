@@ -523,15 +523,18 @@ const getSwoops = function(userId, businessId = 0, cb) {
       INNER JOIN friends 
       WHERE is_pending = 0 AND (sender_id = ${userId} OR receiver_id = ${userId})
       AND (swoops.user_id = friends.receiver_id OR swoops.user_id = friends.sender_id)
-      AND (users.id = swoops.user_id)`;
+      AND (users.id = swoops.user_id)
+      AND (swoops.user_id != ${userId})`;
   } else {
     query = `SELECT DISTINCT swoops.*, users.name FROM swoops, users
       INNER JOIN friends 
       WHERE is_pending = 0 AND (sender_id = ${userId} OR receiver_id = ${userId})
       AND (swoops.user_id = friends.receiver_id OR swoops.user_id = friends.sender_id)
       AND (swoops.business_id = '${businessId}')
-      AND (users.id = swoops.user_id)`;
+      AND (users.id = swoops.user_id)
+      AND (swoops.user_id != ${userId})`;
   }
+  console.log(query);
   connection.query(query, (err, results) => {
     if (err) {
       cb(err, null);
@@ -541,8 +544,14 @@ const getSwoops = function(userId, businessId = 0, cb) {
   });
 }
 
-const getOwnSwoops = function(userId, cb) {
-  let query = `SELECT * FROM swoops WHERE user_id = ${userId}`
+const getOwnSwoops = function(userId, businessId = 0, cb) {
+  var query;
+  if (businessId === 0) {
+    query = `SELECT * FROM swoops WHERE user_id = ${userId}`;
+  } else {
+    query = `SELECT * FROM swoops WHERE user_id = ${userId} AND swoops.business_id = '${businessId}'`;
+  }
+  console.log(query)
   connection.query(query, (err, results) => {
     if (err) {
       cb(err, null);
@@ -553,7 +562,7 @@ const getOwnSwoops = function(userId, cb) {
 }
 
 const deleteSwoop = function(userId, businessId, swoopDate, cb) {
-  console.log('deleteswoops');
+  console.log(userId, businessId, swoopDate);
   let query = `DELETE FROM swoops WHERE user_id = ${userId} AND business_id = '${businessId}' AND swoopDate = '${swoopDate}'`;
   connection.query(query, (err, results) => {
     if (err) {
@@ -594,6 +603,18 @@ const getSquads = function(swoopId, cb) {
 //flake smh
 const deleteSquad = function(userId, swoopId, cb) {
   let query = `DELETE FROM squads WHERE user_id = ${userId} AND swoop_id = '${swoopId}'`;
+  connection.query(query, (err, results) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  });
+}
+
+//party is over
+const deleteSwoopsSquads = function(swoopId, cb) {
+  let query = `DELETE FROM squads WHERE swoop_id = ${swoopId}`;
   connection.query(query, (err, results) => {
     if (err) {
       cb(err, null);
@@ -736,5 +757,6 @@ module.exports = {
   deleteSwoop,
   addSquad,
   getSquads,
-  deleteSquad
+  deleteSquad,
+  deleteSwoopsSquads
 }

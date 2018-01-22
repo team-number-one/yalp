@@ -5,6 +5,7 @@ import PhotoFeed from './PhotoFeed.jsx';
 import Reviews from './Reviews.jsx';
 import AddReview from './AddReview.jsx';
 import FriendActivity from './FriendActivity.jsx';
+import SwoopLocal from './SwoopLocal.jsx';
 import axios from 'axios';
 
 
@@ -104,6 +105,7 @@ class BusinessPage extends React.Component {
           <PhotoFeed photos={this.photos} />
         </div>
         }
+        <SwoopLocal businessId={this.state.business.id}/>
       </div>
     )
   }

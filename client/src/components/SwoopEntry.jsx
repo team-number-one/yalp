@@ -12,6 +12,10 @@ class SwoopEntry extends React.Component {
       // squad it won't work as expected
       squadIds: 0
     }
+    this.squadUp = this.squadUp.bind(this);
+    this.flake = this.flake.bind(this);
+    this.deleteSwoopHandler = this.deleteSwoopHandler.bind(this);
+    this.deleteSwoopsSquads = this.deleteSwoopsSquads.bind(this);
   }
   componentDidMount() {
     this.verifySquad();
@@ -73,11 +77,27 @@ class SwoopEntry extends React.Component {
       })
   }
 
+  deleteSwoopsSquads() {
+    let reqInfo = {
+      swoopId: this.props.swoop.id
+    }
+    axios.post('/swoops/squads/delete', reqInfo)
+    .then(resp => {
+      console.log(resp.data);
+    })
+  }
+
+  deleteSwoopHandler() {
+    this.deleteSwoopsSquads();
+    console.log(this.props)
+    this.props.deleteSwoop(this.state.userInfo.id, this.props.swoop.business_id, this.props.swoop.swoopDate);
+  }
+
   render() {
     return(
       <div>
         <div>
-          At {this.props.swoop.business_id} on {this.props.swoop.swoopDate}
+          At {this.props.swoop.business_name} on {this.props.swoop.swoopDate}
         </div>
         {this.state.squadIds ? 
           this.state.userInSquad ?
@@ -89,9 +109,9 @@ class SwoopEntry extends React.Component {
           {/* is it user own swoop? */}
           { this.props.swoop.user_id !== this.state.userInfo.id ? 
             this.state.userInSquad ?
-            <button className="deleteSquad" onClick={this.flake.bind(this)}>Flake</button>
-            : <button className="addSquad" onClick={this.squadUp.bind(this)}>Squad Up!</button>
-            : <button className="deleteSwoop">Cancel the swoop</button>
+            <button className="deleteSquad" onClick={this.flake}>Flake</button>
+            : <button className="addSquad" onClick={this.squadUp}>Squad Up!</button>
+            : <button className="deleteSwoop" onClick={this.deleteSwoopHandler}>Cancel the swoop</button>
         }
         </div>
       </div>
