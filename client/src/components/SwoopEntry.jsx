@@ -55,8 +55,14 @@ class SwoopEntry extends React.Component {
             }
           }
           if (squadIds.includes(this.state.userInfo.id)) {
+            if (this.state.userInfo.id === this.props.swoop.user_id) {
+              squadStr = squadStr.slice(2)
+            }
             this.setState({userInSquad: true, squad: squadStr, squadIds: squadIds})
           } else {
+            if (this.state.userInfo.id === this.props.swoop.user_id) {
+              squadStr = squadStr.slice(2)
+            }
             this.setState({userInSquad: false, squad: squadStr, squadIds: squadIds});
           }
         }
@@ -80,10 +86,13 @@ class SwoopEntry extends React.Component {
           : <div>Squad: {this.props.swoop.name}</div>
         }
         <div>
-          {this.state.userInSquad ?
+          {/* is it user own swoop? */}
+          { this.props.swoop.user_id !== this.state.userInfo.id ? 
+            this.state.userInSquad ?
             <button className="deleteSquad" onClick={this.flake.bind(this)}>Flake</button>
             : <button className="addSquad" onClick={this.squadUp.bind(this)}>Squad Up!</button>
-          }
+            : <button className="deleteSwoop">Cancel the swoop</button>
+        }
         </div>
       </div>
     )

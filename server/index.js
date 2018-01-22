@@ -283,10 +283,16 @@ app.post('/swoops/delete', (req, res) => {
 });
 
 app.post('/swoops/get', (req, res) => {
-  db.getSwoop(req.body.userId, req.body.businessId, (err, results) => {
+  db.getSwoops(req.body.userId, req.body.businessId, (err, results) => {
     res.status(200).send(results);
   });
 });
+
+app.post('/swoops/get/own', (req, res) => {
+  db.getOwnSwoops(req.body.userId, (err, results) => {
+    res.status(200).send(results);
+  })
+})
 
 app.post('/squads/add', (req, res) => {
   db.addSquad(req.body.userId, req.body.swoopId, (err, results) => {
@@ -302,7 +308,7 @@ app.post('/squads/delete', (req, res) => {
 });
 
 app.post('/squads/get', (req, res) => {
-  db.getSquad(req.body.swoopId, (err, results) => {
+  db.getSquads(req.body.swoopId, (err, results) => {
     res.status(200).send(results);
   });
 });

@@ -516,7 +516,7 @@ let checkSwoopExists = function(userId, businessId, swoopDate, cb) {
 // businessId optional, a swoop list on search page will show all swoops by friends
 // whereas on a page it will show all swoops by friends for that business. So, businessId
 // will only be sent for the swoop rendering on business pages
-const getSwoop = function(userId, businessId = 0, cb) {
+const getSwoops = function(userId, businessId = 0, cb) {
   var query;
   if (businessId === 0) {
     query = `SELECT DISTINCT swoops.*, users.name FROM swoops, users 
@@ -539,6 +539,17 @@ const getSwoop = function(userId, businessId = 0, cb) {
       cb(null, results);
     }
   });
+}
+
+const getOwnSwoops = function(userId, cb) {
+  let query = `SELECT * FROM swoops WHERE user_id = ${userId}`
+  connection.query(query, (err, results) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  })
 }
 
 const deleteSwoop = function(userId, businessId, swoopDate, cb) {
@@ -566,7 +577,7 @@ const addSquad = function(userId, swoopId, cb) {
 }
 
 //who all goin?
-const getSquad = function(swoopId, cb) {
+const getSquads = function(swoopId, cb) {
   let query = `SELECT users.name, users.id FROM users
   INNER JOIN squads
   WHERE squads.user_id = users.id
@@ -720,9 +731,10 @@ module.exports = {
   getChat,
   addSwoop,
   checkSwoopExists,
-  getSwoop,
+  getSwoops,
+  getOwnSwoops,
   deleteSwoop,
   addSquad,
-  getSquad,
+  getSquads,
   deleteSquad
 }

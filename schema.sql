@@ -191,6 +191,8 @@ INSERT INTO swoops (user_id, business_id, swoopDate) VALUES (3, 'place', 'holder
 INSERT INTO swoops (user_id, business_id, swoopDate) VALUES (4, 'chase', 'holder');
 INSERT INTO swoops (user_id, business_id, swoopDate) VALUES (6, 'place', 'holder');
 INSERT INTO swoops (user_id, business_id, swoopDate) VALUES (1, 'place', 'holder');
+INSERT INTO swoops (user_id, business_id, swoopDate) VALUES (7, 'place', 'holder');
+
 
 INSERT INTO squads (user_id, swoop_id) VALUES (3, 1);
 INSERT INTO squads (user_id, swoop_id) VALUES (4, 1);
